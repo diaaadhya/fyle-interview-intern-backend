@@ -1,3 +1,6 @@
+from core.models.assignments import AssignmentStateEnum
+
+
 def test_get_assignments_teacher_1(client, h_teacher_1):
     response = client.get(
         '/teacher/assignments',
@@ -99,3 +102,20 @@ def test_grade_assignment_draft_assignment(client, h_teacher_1):
     data = response.json
 
     assert data['error'] == 'FyleError'
+
+def test_grade_assignmnet(client, h_teacher_2):
+    """"
+    failure case: if an assignmnet submitted but not graded
+    """
+    response = client.post(
+        '/teacher/assignments/grade',
+        headers=h_teacher_2
+        , json={
+            "id": 3,
+            "grade": "A"
+        }
+    )
+    assert response.status_code  == 200
+    data=response.json['data']
+    assert data['grade']=='A'
+    assert data['state']==AssignmentStateEnum.GRADED.value   
