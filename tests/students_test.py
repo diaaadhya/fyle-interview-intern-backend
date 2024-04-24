@@ -38,6 +38,22 @@ def test_post_assignment_null_content(client, h_student_1):
 
     assert response.status_code == 400
 
+def test_post_assignment_null_id(client, h_student_1):
+    """
+    failure case: cannot update assignment not in draft state
+    """
+    content = 'ABCD TESTPOST'
+
+    response = client.post(
+        '/student/assignments',
+        headers=h_student_1,
+        json={
+            'id' : 1,
+            'content': content
+        })
+
+    assert response.status_code == 400
+
 
 def test_post_assignment_student_1(client, h_student_1):
     content = 'ABCD TESTPOST'
