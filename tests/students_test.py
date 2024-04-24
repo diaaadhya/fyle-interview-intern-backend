@@ -74,11 +74,22 @@ def test_post_assignment_student_1(client, h_student_1):
 
 
 def test_submit_assignment_student_1(client, h_student_1):
+    content = 'ABCD TESTPOST'
+
+    assignment = client.post(
+        '/student/assignments',
+        headers=h_student_1,
+        json={
+            'content': content
+        })
+
+    assert assignment.status_code == 200
+    
     response = client.post(
         '/student/assignments/submit',
         headers=h_student_1,
         json={
-            'id': 14,
+            'id': assignment.json['data']['id'],
             'teacher_id': 2
         })
 
